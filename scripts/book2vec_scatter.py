@@ -25,7 +25,7 @@ vec_size = 300
 if not load:
     model = Doc2Vec.load('../models/mymodel_'+str(vec_size)+'.doc2vec')
     #tsne_model_2D = TSNE(n_components=2, random_state=0, verbose=1, init="pca", n_iter=10000, perplexity=50)
-    tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=30)
+    tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100)
     tsne_articles_2D = tsne_model_2D.fit_transform(model.docvecs.vectors_docs)
     np.save('../models/tsne2D_'+str(vec_size)+'.npy', tsne_articles_2D)
 
