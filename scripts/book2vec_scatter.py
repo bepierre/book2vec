@@ -20,10 +20,10 @@ for book_filename in book_filenames:
 
 load = False
 
-vec_size = 300
+vec_size = 600
 
 if not load:
-    model = Doc2Vec.load('../models/mymodel_'+str(vec_size)+'.doc2vec')
+    model = Doc2Vec.load('../models/book2vec_'+str(vec_size)+'.doc2vec')
     #tsne_model_2D = TSNE(n_components=2, random_state=0, verbose=1, init="pca", n_iter=10000, perplexity=50)
     tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100)
     tsne_articles_2D = tsne_model_2D.fit_transform(model.docvecs.vectors_docs)

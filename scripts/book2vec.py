@@ -14,7 +14,7 @@ for book_filename in book_filenames:
             book_corpus.append(
                 TaggedDocument(
                     gensim.utils.simple_preprocess(
-                        book_file.read()), ["{}".format(book_filename)]))
+                        book_file.read()), ['{}'.format(book_filename)]))
     except:
         errors += 1
 
@@ -50,6 +50,6 @@ for epoch in range(epochs):
     model.min_alpha = model.alpha
     print('Finished epoch ' + str(epoch + 1) + ' out of ' + str(epochs))
 
-    model_name =  '../models/mymodel_'+str(vec_size)+'.doc2vec'
+    model_name =  '../models/book2vec_'+str(vec_size)+'.doc2vec'
     model.save(model_name)
     print('Saved model under ' + model_name)

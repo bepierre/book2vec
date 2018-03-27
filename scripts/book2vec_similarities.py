@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 book_filenames = sorted(glob.glob('Documents/BookCorpus/Subset/*/*txt'))
 
-model = Doc2Vec.load('../models/mymodel_300.doc2vec')
+model = Doc2Vec.load('../models/book2vec_300.doc2vec')
 
 #for each article, find the cosine similarity to each other article
 cosine_similarities = []
