@@ -5,9 +5,9 @@ import multiprocessing
 import numpy as np
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
+book_filenames = sorted(glob.glob('../data/Subset/*/*.txt'))
 
-par_length = 50000
+par_length = 10000
 
 paragraph_corpus = []
 vec_names = []

@@ -21,7 +21,7 @@ for vec_name in vec_names:
 load = False
 
 vec_size = 300
-par_length = 50000
+par_length = 20000
 
 if not load:
     model = Doc2Vec.load('../models/par2vec_'+str(vec_size)+'_'+str(int(par_length/1000))+'k.doc2vec')
@@ -40,4 +40,4 @@ for g in range(len(genre_names)):
 
 plt.legend()
 
-plt.savefig('../figures/cluster_2D_'+str(vec_size)+'_par.png')
+plt.savefig('../figures/cluster_2D_'+str(vec_size)+'_par_'+str(int(par_length/1000))+'k.png')
