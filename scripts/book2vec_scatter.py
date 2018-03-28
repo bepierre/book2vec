@@ -20,7 +20,7 @@ for book_filename in book_filenames:
 
 load = False
 
-vec_size = 50
+vec_size = 300
 
 if not load:
     model = Doc2Vec.load('../models/book2vec_'+str(vec_size)+'.doc2vec')

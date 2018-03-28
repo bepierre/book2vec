@@ -47,4 +47,9 @@ for b in range(len(book_filenames)):
         bookseq.append([0]*300)
     book_sequence_of_vectors.append(bookseq)
 
-np.save('../models/input.npy', book_sequence_of_vectors)
+file_path = '../models/book_par_vecs_'+str(int(par_length/1000))+'k.npy'
+print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(max(num_vec), vec_size, int(par_length/1000), len(book_filenames)) + file_path)
+
+np.save(file_path, book_sequence_of_vectors)
+np.save('../models/book_filenames.npy', book_filenames)
+np.save('../models/num_vec.npy', num_vec)

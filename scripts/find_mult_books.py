@@ -4,8 +4,8 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import multiprocessing
 import os
 
-book_filenames = sorted(glob.glob('../data/ScriptCorpus/*/*txt'))
-book_filepaths = sorted(glob.glob('../data/ScriptCorpus/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
+book_filepaths = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
 for i in range(len(book_filenames)):
     book_filenames[i] = book_filenames[i].split('/')[4]
