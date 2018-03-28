@@ -5,9 +5,9 @@ import multiprocessing
 import numpy as np
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/Subset/*/*.txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*.txt'))
 
-par_length = 10000
+par_length = 50000
 
 paragraph_corpus = []
 vec_names = []
@@ -19,8 +19,8 @@ for book_filename in book_filenames:
             paragraph_corpus.append(
                 TaggedDocument(
                     gensim.utils.simple_preprocess(
-                        par), ['{}'.format(book_filename[0:len(book_filename)-4]) + '_par_' + str(p)]))
-            vec_names.append('{}'.format(book_filename[0:len(book_filename)-4]) + '_par_' + str(p))
+                        par), [book_filename[0:len(book_filename)-4] + '_par_' + str(p)]))
+            vec_names.append(book_filename[0:len(book_filename)-4] + '_par_' + str(p))
             p += 1
 
 np.save('../models/vec_names_'+str(int(par_length/1000))+'k.npy', vec_names)

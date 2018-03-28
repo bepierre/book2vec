@@ -4,8 +4,8 @@ from gensim.models.doc2vec import Doc2Vec
 import matplotlib.pyplot as plt
 import numpy as np
 
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
-genre_names = sorted(glob.glob('../data/Subset/*'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
+genre_names = sorted(glob.glob('../data/BookCorpus/*'))
 
 for i in range(len(genre_names)):
     genre_names[i] = genre_names[i].split('/')[3]
@@ -20,7 +20,7 @@ for book_filename in book_filenames:
 
 load = False
 
-vec_size = 600
+vec_size = 50
 
 if not load:
     model = Doc2Vec.load('../models/book2vec_'+str(vec_size)+'.doc2vec')

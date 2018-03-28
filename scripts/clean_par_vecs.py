@@ -2,9 +2,9 @@ import numpy as np
 from gensim.models.doc2vec import Doc2Vec
 import glob
 
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 vec_names = np.load('../models/vec_names_20k.npy').tolist()
-genre_names = sorted(glob.glob('../data/Subset/*'))
+genre_names = sorted(glob.glob('../data/BookCorpus/*'))
 
 for i in range(len(genre_names)):
     genre_names[i] = genre_names[i].split('/')[3]
@@ -24,22 +24,27 @@ model = Doc2Vec.load('../models/par2vec_'+str(vec_size)+'_'+str(int(par_length/1
 #print(list(model.docvecs.doctags.keys())[0])
 #print(vec_names[0])
 
-seq_lengths = [0]*len(book_filenames)
+num_vec = [0] * len(book_filenames)
 curr_seq_length = 0
 b = -1
 for vec_name in vec_names:
     if int(vec_name.split('_')[-1]) == 1:
-        print(vec_name)
         b += 1
-        print(book_filenames[b])
         curr_seq_length = 0
     if int(vec_name.split('_')[-1]) > curr_seq_length:
         curr_seq_length = int(vec_name.split('_')[-1])
-        seq_lengths[b] = curr_seq_length
+        num_vec[b] = curr_seq_length
 
-print(len(model.docvecs.vectors_docs))
+book_sequence_of_vectors = []
 
-book_sequence_of_vectors = [[[0] * 300]*max(seq_lengths)]*len(book_filenames)
+i = 0
+for b in range(len(book_filenames)):
+    bookseq = []
+    for p in range(num_vec[b]):
+        bookseq.append(model.docvecs[i])
+        i += 1
+    for q in range(num_vec[b], max(num_vec)):
+        bookseq.append([0]*300)
+    book_sequence_of_vectors.append(bookseq)
 
-
-
+np.save('../models/input.npy', book_sequence_of_vectors)

@@ -3,7 +3,7 @@ from gensim.models.doc2vec import Doc2Vec
 import matplotlib.pyplot as plt
 
 
-book_filenames = sorted(glob.glob('Documents/BookCorpus/Subset/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
 model = Doc2Vec.load('../models/book2vec_300.doc2vec')
 

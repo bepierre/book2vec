@@ -1,14 +1,20 @@
 import glob
 from gensim.models.doc2vec import Doc2Vec
 
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
 
-model = Doc2Vec.load('../models/book2vec_50.doc2vec')
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
-#print(model.docvecs.most_similar(book_filenames.index("Documents/BookCorpus/Subset/Romance/Wild_About_You_1.txt")))
-print(model.docvecs.most_similar(book_filenames.index("../data/Subset/Fantasy/Mistborn-1.txt")))
+model = Doc2Vec.load('../models/book2vec_10.doc2vec')
 
+print(model.docvecs.most_similar(book_filenames.index("../data/BookCorpus/Fantasy/Mistborn-1.txt")))
 
+'''
+script_filenames = sorted(glob.glob('../data/ScriptCorpus/*/*txt'))
+
+model = Doc2Vec.load('../models/script2vec_300.doc2vec')
+
+print(model.docvecs.most_similar(script_filenames.index("../data/ScriptCorpus/Fantasy/batman.txt")))
+'''
 
 '''
 for book_filename in book_filenames:

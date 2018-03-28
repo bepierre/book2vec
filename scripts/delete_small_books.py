@@ -2,7 +2,7 @@ import glob
 import os
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
 for book_filename in book_filenames:
     if len(open(book_filename, 'r').read()) < 50000:

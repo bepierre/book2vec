@@ -4,7 +4,7 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import multiprocessing
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/Subset/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
 book_corpus = []
 errors = 0
@@ -14,7 +14,7 @@ for book_filename in book_filenames:
             book_corpus.append(
                 TaggedDocument(
                     gensim.utils.simple_preprocess(
-                        book_file.read()), ['{}'.format(book_filename)]))
+                        book_file.read()), [book_filename]))
     except:
         errors += 1
 
@@ -29,7 +29,7 @@ print('Total number of words: ' + str(words))
 
 cores = multiprocessing.cpu_count()
 
-vec_size = 50
+vec_size = 10
 
 model = Doc2Vec(size = vec_size, min_count = 5, workers=cores, alpha = 0.025, min_alpha=0.025, iter=10)
 #model = Doc2Vec(size = 300, min_count = 5, workers=cores, iter = 10)
