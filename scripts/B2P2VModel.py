@@ -86,7 +86,7 @@ class B2P2VModel:
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=256)
-    dataset = dataset.repeat(10)
+    #dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -125,16 +125,26 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v_4",
+        model_dir="../models/b2p2v_1",
         config=estimator_config,
         params={})
 
-    train = True
+    train = False
 
     if train:
-        for ep in range(0, 300):
+        epochs = 2000
+        for ep in range(epochs):
             classifier.train(input_fn=b2p2vmodel.input_fn)
     else:
         predictions = classifier.predict(input_fn=b2p2vmodel.input_fn)
+        book_filenames = []
+        book_vecs = []
         for p in predictions:
-            print(p["state"])
+            book_filenames.append(p['book'].decode("utf-8"))
+            book_vecs.append(p['state'])
+
+        book_vecs = Z = [x for _,x in sorted(zip(book_filenames,book_vecs))]
+        book_filenames = sorted(book_filenames)
+
+        np.save('../models/b2p2v_book_filenames.npy', book_filenames)
+        np.save('../models/b2p2v_book_vecs.npy', book_vecs)
