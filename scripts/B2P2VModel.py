@@ -29,7 +29,7 @@ class B2P2VModel:
 
     loss = tf.reduce_sum(tf.squared_difference(outputs, target_seq), axis=2) # [B, T]
     loss = loss * mask # [B, T]
-    loss = tf.Print(loss, [loss, tf.shape(loss)])
+    #loss = tf.Print(loss, [loss, tf.shape(loss)])
 
     total_loss = tf.reduce_mean(loss)
 
