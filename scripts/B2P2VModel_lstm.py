@@ -21,7 +21,8 @@ class B2P2VModel:
     target_seq = features['target_seq']
 
     with tf.variable_scope("encoder"):
-      cell = tf.contrib.rnn.GRUCell(hparams.embed_size)
+      #cell = tf.contrib.rnn.GRUCell(hparams.embed_size)
+      cell = tf.contrib.rnn.LSTMCell(hparams.embed_size)
       outputs, state_encoder = tf.nn.dynamic_rnn(cell=cell, inputs=encoder_inputs,
                                                  sequence_length=encoder_inputs_length, dtype=tf.float32)
 
@@ -44,7 +45,8 @@ class B2P2VModel:
     if mode == tf.estimator.ModeKeys.PREDICT:
         predictions = {
             "book" : file_name,
-            "state": state_encoder
+            "c_state": state_encoder[0],
+            "h_state": state_encoder[0]
         }
         return tf.estimator.EstimatorSpec(mode, loss=total_loss, predictions=predictions)
 
@@ -124,7 +126,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v_1",
+        model_dir="../models/b2p2v_lstm",
         config=estimator_config,
         params={})
 
@@ -137,13 +139,17 @@ if __name__ == '__main__':
     else:
         predictions = classifier.predict(input_fn=b2p2vmodel.input_fn)
         book_filenames = []
-        book_vecs = []
+        book_vecs_c = []
+        book_vecs_h = []
         for p in predictions:
             book_filenames.append(p['book'].decode("utf-8"))
-            book_vecs.append(p['state'])
+            book_vecs_c.append(p['c_state'])
+            book_vecs_h.append(p['h_state'])
 
-        book_vecs = [x for _,x in sorted(zip(book_filenames,book_vecs))]
+        book_vecs_c = [x for _,x in sorted(zip(book_filenames,book_vecs_c))]
+        book_vecs_h = [x for _, x in sorted(zip(book_filenames, book_vecs_h))]
         book_filenames = sorted(book_filenames)
 
         np.save('../models/b2p2v_book_filenames.npy', book_filenames)
-        np.save('../models/b2p2v_book_vecs.npy', book_vecs)
+        np.save('../models/b2p2v_book_vecs_c.npy', book_vecs_c)
+        np.save('../models/b2p2v_book_vecs_h.npy', book_vecs_h)
