@@ -128,7 +128,7 @@ if __name__ == '__main__':
         config=estimator_config,
         params={})
 
-    train = True
+    train = False
 
     if train:
         epochs = 5000
