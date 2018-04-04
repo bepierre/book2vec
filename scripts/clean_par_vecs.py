@@ -35,19 +35,40 @@ for vec_name in vec_names:
         curr_seq_length = int(vec_name.split('_')[-1])
         num_vec[b] = curr_seq_length
 
+par_vecs = model.docvecs.vectors_docs
+
+normalize = True
+
+if normalize:
+    norm_vecs = []
+
+    b_mean = np.mean(par_vecs, axis=0)
+    b_var = np.var(par_vecs, axis=0)
+
+    for vec_name in vec_names:
+        norm_vecs.append((model[vec_names.index(vec_name)] - b_mean) / b_var)
+
+    np.save('../models/norm_par_vecs.npy', norm_vecs)
+
 book_sequence_of_vectors = []
 
 i = 0
 for b in range(len(book_filenames)):
     bookseq = []
     for p in range(num_vec[b]):
-        bookseq.append(model.docvecs[i])
+        if normalize:
+            bookseq.append(norm_vecs[i])
+        else:
+            bookseq.append(model.docvecs[i])
         i += 1
     for q in range(num_vec[b], max(num_vec)):
         bookseq.append([0]*300)
     book_sequence_of_vectors.append(bookseq)
 
-file_path = '../models/book_par_vecs_'+str(int(par_length/1000))+'k.npy'
+if normalize:
+    file_path = '../models/book_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
+else:
+    file_path = '../models/book_par_vecs_'+str(int(par_length/1000))+'k.npy'
 print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(max(num_vec), vec_size, int(par_length/1000), len(book_filenames)) + file_path)
 
 np.save(file_path, book_sequence_of_vectors)

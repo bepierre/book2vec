@@ -28,9 +28,9 @@ if not load:
                 #print(vec_name)
                 norm_vecs.append((model[vec_names.index(vec_name)] - b_mean) / b_var)
 
-    np.save('../models/norm_par_vecs.npy', norm_vecs)
+    np.save('../models/norm_by_book_par_vecs.npy', norm_vecs)
 else:
-    norm_vecs = np.load('../models/norm_par_vecs.npy')
+    norm_vecs = np.load('../models/norm_by_book_par_vecs.npy')
 
 #model = Doc2Vec.load('../models/par2vec_300_20k.doc2vec')
 #norm_vecs = model.docvecs.vectors_docs
