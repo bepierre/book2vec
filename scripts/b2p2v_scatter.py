@@ -31,4 +31,4 @@ for g in range(len(genre_names)):
 
 plt.legend()
 
-plt.savefig('../figures/cluster_2D_b2v2p_'+str(vec_size)+'.png')
+plt.savefig('../figures/cluster_2D_b2v2p_3_'+str(vec_size)+'.png')

@@ -7,7 +7,7 @@ import numpy as np
 print("Searching for books.")
 book_filenames = sorted(glob.glob('../data/BookCorpus/*/*.txt'))
 
-par_length = 50000
+par_length = 20000
 
 paragraph_corpus = []
 vec_names = []

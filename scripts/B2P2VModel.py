@@ -124,14 +124,14 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v_1",
+        model_dir="../models/b2p2v",
         config=estimator_config,
         params={})
 
-    train = False
+    train = True
 
     if train:
-        epochs = 2000
+        epochs = 5000
         for ep in range(epochs):
             classifier.train(input_fn=b2p2vmodel.input_fn)
     else:

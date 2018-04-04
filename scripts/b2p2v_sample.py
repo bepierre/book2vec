@@ -6,7 +6,7 @@ book_filenames1 = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 
 model = Doc2Vec.load('../models/book2vec_300.doc2vec')
 
-book_vecs = np.load('../models/b2p2v_book_vecs.npy')
+book_vecs = np.load('../models/b2p2v_book_vecs_c.npy')
 book_filenames2 = np.load('../models/b2p2v_book_filenames.npy')
 
 print(book_filenames1[0])
