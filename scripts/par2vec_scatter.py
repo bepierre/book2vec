@@ -26,7 +26,7 @@ load = False
 
 if not load:
     model = Doc2Vec.load('../models/par2vec_'+str(vec_size)+'_'+str(int(par_length/1000))+'k.doc2vec')
-    tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100)
+    tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100, init='pca')
     tsne_articles_2D = tsne_model_2D.fit_transform(model.docvecs.vectors_docs)
     np.save('../models/tsne2D_'+str(vec_size)+'_par.npy', tsne_articles_2D)
 else:

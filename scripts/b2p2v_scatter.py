@@ -19,7 +19,7 @@ for book_filename in book_filenames:
 
 vec_size = 300
 
-tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100)
+tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100, init='pca')
 tsne_articles_2D = tsne_model_2D.fit_transform(book_vecs)
 
 # 2D
@@ -31,4 +31,5 @@ for g in range(len(genre_names)):
 
 plt.legend()
 
-plt.savefig('../figures/cluster_2D_b2v2p_3_'+str(vec_size)+'.png')
+
+plt.savefig('../figures/cluster_2D_b2v2p_'+str(vec_size)+'.png')

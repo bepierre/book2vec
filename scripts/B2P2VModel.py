@@ -43,8 +43,9 @@ class B2P2VModel:
 
     if mode == tf.estimator.ModeKeys.PREDICT:
         predictions = {
-            "book" : file_name,
-            "state": state_encoder
+            'book': file_name,
+            'state': state_encoder,
+            'outputs': outputs
         }
         return tf.estimator.EstimatorSpec(mode, loss=total_loss, predictions=predictions)
 
@@ -124,7 +125,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v",
+        model_dir='../models/b2p2v',
         config=estimator_config,
         params={})
 
@@ -138,12 +139,16 @@ if __name__ == '__main__':
         predictions = classifier.predict(input_fn=b2p2vmodel.input_fn)
         book_filenames = []
         book_vecs = []
+        predicted_vecs = []
         for p in predictions:
-            book_filenames.append(p['book'].decode("utf-8"))
+            book_filenames.append(p['book'].decode('utf-8'))
             book_vecs.append(p['state'])
+            predicted_vecs.append(p['outputs'])
 
         book_vecs = [x for _,x in sorted(zip(book_filenames,book_vecs))]
+        predicted_vecs = [x for _, x in sorted(zip(book_filenames, predicted_vecs))]
         book_filenames = sorted(book_filenames)
 
         np.save('../models/b2p2v_book_filenames.npy', book_filenames)
         np.save('../models/b2p2v_book_vecs.npy', book_vecs)
+        np.save('../models/b2p2v_predicted_vecs.npy', predicted_vecs)

@@ -29,7 +29,7 @@ print('Total number of words: ' + str(words))
 
 cores = multiprocessing.cpu_count()
 
-vec_size = 10
+vec_size = 300
 
 model = Doc2Vec(size = vec_size, min_count = 5, workers=cores, alpha = 0.025, min_alpha=0.025, iter=10)
 #model = Doc2Vec(size = 300, min_count = 5, workers=cores, iter = 10)

@@ -39,9 +39,9 @@ tree = spatial.KDTree(norm_vecs)
 
 #b = '../data/BookCorpus/Thriller/James_Bond-1'
 #b = '../data/BookCorpus/Thriller/Da_Vinci_Code'
-#b = '../data/BookCorpus/Romance/Attachments'
-#b = '../data/BookCorpus/Fantasy/Mistborn-1'
-b = '../data/BookCorpus/Science_fiction/Asimov47'
+b = '../data/BookCorpus/Romance/Attachments'
+#b = '../data/BookCorpus/Fantasy/Wheel_of_Time-12'
+#b = '../data/BookCorpus/Science_fiction/Asimov47'
 
 
 p = 1
