@@ -86,7 +86,7 @@ class B2P2VModel:
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=256)
-    #dataset = dataset.repeat(10)
+    dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -120,19 +120,19 @@ if __name__ == '__main__':
     b2p2vmodel = B2P2VModel()
 
     session_config = tf.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.8
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.4
     estimator_config = tf.estimator.RunConfig(session_config=session_config)
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_norm',
+        model_dir='../models/b2p2v_norm_3',
         config=estimator_config,
         params={})
 
-    train = False
+    train = True
 
     if train:
-        epochs = 10000
+        epochs = 2000
         for ep in range(epochs):
             classifier.train(input_fn=b2p2vmodel.input_fn)
     else:

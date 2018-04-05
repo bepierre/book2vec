@@ -46,7 +46,8 @@ class B2P2VModel:
         predictions = {
             "book" : file_name,
             "c_state": state_encoder[0],
-            "h_state": state_encoder[0]
+            "h_state": state_encoder[0],
+            'outputs': outputs
         }
         return tf.estimator.EstimatorSpec(mode, loss=total_loss, predictions=predictions)
 
@@ -66,7 +67,7 @@ class B2P2VModel:
 
     def generator_lj():
         # load vectors
-        par_vecs = np.load('../models/book_par_vecs_20k.npy')
+        par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
         book_names = np.load('../models/book_filenames.npy')
         num_vec = np.load('../models/num_vec.npy')
 
@@ -87,7 +88,7 @@ class B2P2VModel:
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=256)
-    #dataset = dataset.repeat(10)
+    dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -121,19 +122,19 @@ if __name__ == '__main__':
     b2p2vmodel = B2P2VModel()
 
     session_config = tf.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.8
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.4
     estimator_config = tf.estimator.RunConfig(session_config=session_config)
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v_lstm",
+        model_dir="../models/b2p2v_lstm_2",
         config=estimator_config,
         params={})
 
-    train = False
+    train = True
 
     if train:
-        epochs = 2000
+        epochs = 10000
         for ep in range(epochs):
             classifier.train(input_fn=b2p2vmodel.input_fn)
     else:
@@ -141,15 +142,19 @@ if __name__ == '__main__':
         book_filenames = []
         book_vecs_c = []
         book_vecs_h = []
+        predicted_vecs = []
         for p in predictions:
             book_filenames.append(p['book'].decode("utf-8"))
             book_vecs_c.append(p['c_state'])
             book_vecs_h.append(p['h_state'])
+            predicted_vecs.append(p['outputs'])
 
         book_vecs_c = [x for _,x in sorted(zip(book_filenames,book_vecs_c))]
         book_vecs_h = [x for _, x in sorted(zip(book_filenames, book_vecs_h))]
+        predicted_vecs = [x for _, x in sorted(zip(book_filenames, predicted_vecs))]
         book_filenames = sorted(book_filenames)
 
         np.save('../models/b2p2v_book_filenames.npy', book_filenames)
         np.save('../models/b2p2v_book_vecs_c.npy', book_vecs_c)
         np.save('../models/b2p2v_book_vecs_h.npy', book_vecs_h)
+        np.save('../models/b2p2v_predicted_vecs_lstm.npy', predicted_vecs)
