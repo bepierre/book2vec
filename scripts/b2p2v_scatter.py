@@ -19,7 +19,7 @@ for book_filename in book_filenames:
 
 vec_size = 300
 
-tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=15, init='pca')
+tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=100, init='pca')
 tsne_articles_2D = tsne_model_2D.fit_transform(book_vecs)
 
 # 2D

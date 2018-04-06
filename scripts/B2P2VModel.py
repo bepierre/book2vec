@@ -61,13 +61,18 @@ class B2P2VModel:
     return tf.estimator.EstimatorSpec(mode, loss=total_loss, train_op=train_op)
 
 
-  def input_fn(self):
+  def input_fn(self, mode):
 
-    def generator_lj():
+    def generator_lj(mode):
         # load vectors
-        par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
-        book_names = np.load('../models/book_filenames.npy')
-        num_vec = np.load('../models/num_vec.npy')
+        if(mode=='eval'):
+            par_vecs = np.load('../models/eval_norm_par_vecs_20k.npy')
+            book_names = np.load('../models/eval_book_filenames.npy')
+            num_vec = np.load('../models/eval_num_vec.npy')
+        else:
+            par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
+            book_names = np.load('../models/book_filenames.npy')
+            num_vec = np.load('../models/num_vec.npy')
 
         for name, par_vec, length in zip(book_names, par_vecs, num_vec):
             input_sequence = par_vec
@@ -77,7 +82,7 @@ class B2P2VModel:
 
             yield input_sequence, sequence_length, target_sequence, file_name
 
-    dataset = tf.data.Dataset.from_generator(generator_lj,
+    dataset = tf.data.Dataset.from_generator(lambda: generator_lj(mode),
                                              output_types=(tf.float32, tf.int32, tf.float32, tf.string),
                                              output_shapes=(tf.TensorShape([None, 300]),
                                                             tf.TensorShape([]),
@@ -86,7 +91,7 @@ class B2P2VModel:
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=256)
-    dataset = dataset.repeat(10)
+    #dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -125,7 +130,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_norm_3',
+        model_dir='../models/b2p2v_eval',
         config=estimator_config,
         params={})
 
@@ -134,9 +139,10 @@ if __name__ == '__main__':
     if train:
         epochs = 2000
         for ep in range(epochs):
-            classifier.train(input_fn=b2p2vmodel.input_fn)
+            classifier.train(input_fn=lambda: b2p2vmodel.input_fn('train'))
+            classifier.evaluate(input_fn=lambda: b2p2vmodel.input_fn('eval'))
     else:
-        predictions = classifier.predict(input_fn=b2p2vmodel.input_fn)
+        predictions = classifier.predict(input_fn=lambda: b2p2vmodel.input_fn('train'))
         book_filenames = []
         book_vecs = []
         predicted_vecs = []

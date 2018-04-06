@@ -4,7 +4,7 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import multiprocessing
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 
 book_corpus = []
 errors = 0
@@ -50,6 +50,6 @@ for epoch in range(epochs):
     model.min_alpha = model.alpha
     print('Finished epoch ' + str(epoch + 1) + ' out of ' + str(epochs))
 
-    model_name =  '../models/book2vec_'+str(vec_size)+'.doc2vec'
+    model_name =  '../models/book2vec_full_'+str(vec_size)+'.doc2vec'
     model.save(model_name)
     print('Saved model under ' + model_name)

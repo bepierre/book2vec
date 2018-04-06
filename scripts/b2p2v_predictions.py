@@ -17,8 +17,6 @@ tree = spatial.KDTree(norm_vecs)
 predicted_vecs = np.load('../models/b2p2v_predicted_vecs.npy')
 predicted_vecs_lstm = np.load('../models/b2p2v_predicted_vecs_lstm.npy')
 
-p = 16
-
 #b = '../data/BookCorpus/Thriller/James_Bond-1.txt'
 b = '../data/BookCorpus/Thriller/Da_Vinci_Code.txt'
 #b = '../data/BookCorpus/Romance/Attachments.txt'
@@ -26,26 +24,32 @@ b = '../data/BookCorpus/Thriller/Da_Vinci_Code.txt'
 #b = '../data/BookCorpus/Fantasy/The_Hobbit.txt'
 #b = '../data/BookCorpus/Fantasy/Stormlight_Archive-1.txt'
 
-distances, closest = tree.query(predicted_vecs[book_filenames.index(b)][p], k= 3)
+#p = 0
 
-#a = np.atleast_2d(par_vecs)
-#print("%d, %d" % (np.min(a), np.max(a)))
+for p in range(30):
 
-i = 0
-for c in closest:
-    print(vec_names[c])
-    print(distances[i])
-    i += 1
+    distances, closest = tree.query(predicted_vecs[book_filenames.index(b)][p], k= 2)
 
-print('\n')
+    #a = np.atleast_2d(par_vecs)
+    #print("%d, %d" % (np.min(a), np.max(a)))
 
-distances, closest = tree.query(predicted_vecs_lstm[book_filenames.index(b)][p], k= 3)
+    print('GRU:')
 
-#a = np.atleast_2d(par_vecs)
-#print("%d, %d" % (np.min(a), np.max(a)))
+    i = 0
+    for c in closest:
+        print(vec_names[c])
+        print(distances[i])
+        i += 1
 
-i = 0
-for c in closest:
-    print(vec_names[c])
-    print(distances[i])
-    i += 1
+    print('----------------------------')
+    print('LSTM:')
+
+    distances, closest = tree.query(predicted_vecs_lstm[book_filenames.index(b)][p], k= 2)
+
+    i = 0
+    for c in closest:
+        print(vec_names[c])
+        print(distances[i])
+        i += 1
+
+    print('____________________________')

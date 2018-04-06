@@ -1,6 +1,7 @@
 import numpy as np
 from gensim.models.doc2vec import Doc2Vec
 import glob
+import random
 
 book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
 vec_names = np.load('../models/vec_names_20k.npy').tolist()
@@ -37,18 +38,15 @@ for vec_name in vec_names:
 
 par_vecs = model.docvecs.vectors_docs
 
-normalize = True
+norm_vecs = []
 
-if normalize:
-    norm_vecs = []
+b_mean = np.mean(par_vecs, axis=0)
+b_var = np.var(par_vecs, axis=0)
 
-    b_mean = np.mean(par_vecs, axis=0)
-    b_var = np.var(par_vecs, axis=0)
+for vec_name in vec_names:
+    norm_vecs.append((model[vec_names.index(vec_name)] - b_mean) / b_var)
 
-    for vec_name in vec_names:
-        norm_vecs.append((model[vec_names.index(vec_name)] - b_mean) / b_var)
-
-    np.save('../models/norm_par_vecs.npy', norm_vecs)
+np.save('../models/norm_par_vecs.npy', norm_vecs)
 
 book_sequence_of_vectors = []
 
@@ -56,21 +54,32 @@ i = 0
 for b in range(len(book_filenames)):
     bookseq = []
     for p in range(num_vec[b]):
-        if normalize:
-            bookseq.append(norm_vecs[i])
-        else:
-            bookseq.append(model.docvecs[i])
+        bookseq.append(norm_vecs[i])
         i += 1
     for q in range(num_vec[b], max(num_vec)):
         bookseq.append([0]*300)
     book_sequence_of_vectors.append(bookseq)
 
-if normalize:
-    file_path = '../models/book_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
-else:
-    file_path = '../models/book_par_vecs_'+str(int(par_length/1000))+'k.npy'
+eval_samples = random.sample(range(len(book_filenames)), 30)
+
+eval_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if i in eval_samples]
+eval_book_filenames = [x for i, x in enumerate(book_filenames) if i in eval_samples]
+eval_num_vec = [x for i, x in enumerate(num_vec) if i in eval_samples]
+
+book_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if i not in eval_samples]
+book_filenames = [x for i, x in enumerate(book_filenames) if i not in eval_samples]
+num_vec = [x for i, x in enumerate(num_vec) if i not in eval_samples]
+
+file_path = '../models/book_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
 print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(max(num_vec), vec_size, int(par_length/1000), len(book_filenames)) + file_path)
 
 np.save(file_path, book_sequence_of_vectors)
 np.save('../models/book_filenames.npy', book_filenames)
 np.save('../models/num_vec.npy', num_vec)
+
+file_path = '../models/eval_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
+print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books (evaluation set) under '.format(max(num_vec), vec_size, int(par_length/1000), len(eval_book_filenames)) + file_path)
+
+np.save(file_path, eval_sequence_of_vectors)
+np.save('../models/eval_book_filenames.npy', eval_book_filenames)
+np.save('../models/eval_num_vec.npy', eval_num_vec)
