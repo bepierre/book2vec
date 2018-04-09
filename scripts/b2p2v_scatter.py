@@ -3,7 +3,7 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
 
-book_vecs = np.load('../models/b2p2v_book_vecs_c.npy')
+book_vecs = np.load('../models/b2p2v_book_vecs.npy')
 book_filenames = np.load('../models/b2p2v_book_filenames.npy')
 genre_names = sorted(glob.glob('../data/BookCorpus/*'))
 
@@ -32,4 +32,4 @@ for g in range(len(genre_names)):
 plt.legend()
 
 
-plt.savefig('../figures/cluster_2D_b2v2p_c_'+str(vec_size)+'.png')
+plt.savefig('../figures/cluster_2D_b2v2p_trained_on_full_'+str(vec_size)+'.png')

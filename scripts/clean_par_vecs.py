@@ -3,9 +3,11 @@ from gensim.models.doc2vec import Doc2Vec
 import glob
 import random
 
-book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
-vec_names = np.load('../models/vec_names_20k.npy').tolist()
-genre_names = sorted(glob.glob('../data/BookCorpus/*'))
+size = '_full'
+
+book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
+vec_names = np.load('../models/vec_names'+size+'_20k.npy').tolist()
+genre_names = sorted(glob.glob('../data/BookCorpusFull/*'))
 
 for i in range(len(genre_names)):
     genre_names[i] = genre_names[i].split('/')[3]
@@ -20,7 +22,7 @@ for vec_name in vec_names:
 vec_size = 300
 par_length = 20000
 
-model = Doc2Vec.load('../models/par2vec_'+str(vec_size)+'_'+str(int(par_length/1000))+'k.doc2vec')
+model = Doc2Vec.load('../models/par2vec'+size+'_'+str(vec_size)+'_'+str(int(par_length/1000))+'k.doc2vec')
 
 #print(list(model.docvecs.doctags.keys())[0])
 #print(vec_names[0])
@@ -46,7 +48,7 @@ b_var = np.var(par_vecs, axis=0)
 for vec_name in vec_names:
     norm_vecs.append((model[vec_names.index(vec_name)] - b_mean) / b_var)
 
-np.save('../models/norm_par_vecs.npy', norm_vecs)
+np.save('../models/norm_par_vecs'+size+'.npy', norm_vecs)
 
 book_sequence_of_vectors = []
 
@@ -60,7 +62,7 @@ for b in range(len(book_filenames)):
         bookseq.append([0]*300)
     book_sequence_of_vectors.append(bookseq)
 
-eval_samples = random.sample(range(len(book_filenames)), 30)
+eval_samples = random.sample(range(len(book_filenames)), 500)
 
 eval_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if i in eval_samples]
 eval_book_filenames = [x for i, x in enumerate(book_filenames) if i in eval_samples]
@@ -70,16 +72,16 @@ book_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if
 book_filenames = [x for i, x in enumerate(book_filenames) if i not in eval_samples]
 num_vec = [x for i, x in enumerate(num_vec) if i not in eval_samples]
 
-file_path = '../models/book_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
+file_path = '../models/book_norm_par_vecs'+ size +'_' + str(int(par_length / 1000)) + 'k.npy'
 print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(max(num_vec), vec_size, int(par_length/1000), len(book_filenames)) + file_path)
 
 np.save(file_path, book_sequence_of_vectors)
-np.save('../models/book_filenames.npy', book_filenames)
-np.save('../models/num_vec.npy', num_vec)
+np.save('../models/book_filenames'+ size +'.npy', book_filenames)
+np.save('../models/num_vec'+ size +'.npy', num_vec)
 
-file_path = '../models/eval_norm_par_vecs_' + str(int(par_length / 1000)) + 'k.npy'
+file_path = '../models/eval_norm_par_vecs'+ size +'_'  + str(int(par_length / 1000)) + 'k.npy'
 print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books (evaluation set) under '.format(max(num_vec), vec_size, int(par_length/1000), len(eval_book_filenames)) + file_path)
 
 np.save(file_path, eval_sequence_of_vectors)
-np.save('../models/eval_book_filenames.npy', eval_book_filenames)
-np.save('../models/eval_num_vec.npy', eval_num_vec)
+np.save('../models/eval_book_filenames'+ size +'.npy', eval_book_filenames)
+np.save('../models/eval_num_vec'+ size +'.npy', eval_num_vec)

@@ -66,13 +66,18 @@ class B2P2VModel:
     def generator_lj(mode):
         # load vectors
         if(mode=='eval'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_20k.npy')
-            book_names = np.load('../models/eval_book_filenames.npy')
-            num_vec = np.load('../models/eval_num_vec.npy')
-        else:
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_20k.npy')
+            book_names = np.load('../models/eval_book_filenames_full.npy')
+            num_vec = np.load('../models/eval_num_vec_full.npy')
+        elif(mode=='train'):
+            par_vecs = np.load('../models/book_norm_par_vecs_full_20k.npy')
+            book_names = np.load('../models/book_filenames_full.npy')
+            num_vec = np.load('../models/num_vec_full.npy')
+        elif(mode=='predict'):
             par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
             book_names = np.load('../models/book_filenames.npy')
             num_vec = np.load('../models/num_vec.npy')
+
 
         for name, par_vec, length in zip(book_names, par_vecs, num_vec):
             input_sequence = par_vec
@@ -125,24 +130,24 @@ if __name__ == '__main__':
     b2p2vmodel = B2P2VModel()
 
     session_config = tf.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.4
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.8
     estimator_config = tf.estimator.RunConfig(session_config=session_config)
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_eval',
+        model_dir='../models/b2p2v_full_2',
         config=estimator_config,
         params={})
 
-    train = True
+    train = False
 
     if train:
-        epochs = 2000
+        epochs = 10000
         for ep in range(epochs):
             classifier.train(input_fn=lambda: b2p2vmodel.input_fn('train'))
             classifier.evaluate(input_fn=lambda: b2p2vmodel.input_fn('eval'))
     else:
-        predictions = classifier.predict(input_fn=lambda: b2p2vmodel.input_fn('train'))
+        predictions = classifier.predict(input_fn=lambda: b2p2vmodel.input_fn('predict'))
         book_filenames = []
         book_vecs = []
         predicted_vecs = []

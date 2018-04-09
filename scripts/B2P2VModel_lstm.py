@@ -67,11 +67,15 @@ class B2P2VModel:
 
     def generator_lj(mode):
         # load vectors
-        if(mode=='eval'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_20k.npy')
-            book_names = np.load('../models/eval_book_filenames.npy')
-            num_vec = np.load('../models/eval_num_vec.npy')
-        else:
+        if (mode == 'eval'):
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_20k.npy')
+            book_names = np.load('../models/eval_book_filenames_full.npy')
+            num_vec = np.load('../models/eval_num_vec_full.npy')
+        elif (mode == 'train'):
+            par_vecs = np.load('../models/book_norm_par_vecs_full_20k.npy')
+            book_names = np.load('../models/book_filenames_full.npy')
+            num_vec = np.load('../models/num_vec_full.npy')
+        elif (mode == 'predict'):
             par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
             book_names = np.load('../models/book_filenames.npy')
             num_vec = np.load('../models/num_vec.npy')
@@ -134,7 +138,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir="../models/b2p2v_lstm_eval",
+        model_dir="../models/b2p2v_lstm_full",
         config=estimator_config,
         params={})
 
@@ -146,7 +150,7 @@ if __name__ == '__main__':
             classifier.train(input_fn=lambda: b2p2vmodel.input_fn('train'))
             classifier.evaluate(input_fn=lambda: b2p2vmodel.input_fn('eval'))
     else:
-        predictions = classifier.predict(input_fn=lambda: b2p2vmodel.input_fn('train'))
+        predictions = classifier.predict(input_fn=lambda: b2p2vmodel.input_fn('predict'))
         book_filenames = []
         book_vecs_c = []
         book_vecs_h = []
