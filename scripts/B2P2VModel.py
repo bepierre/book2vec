@@ -65,18 +65,18 @@ class B2P2VModel:
 
     def generator_lj(mode):
         # load vectors
-        if(mode=='eval'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_full_20k.npy')
-            book_names = np.load('../models/eval_book_filenames_full.npy')
-            num_vec = np.load('../models/eval_num_vec_full.npy')
-        elif(mode=='train'):
-            par_vecs = np.load('../models/book_norm_par_vecs_full_20k.npy')
-            book_names = np.load('../models/book_filenames_full.npy')
-            num_vec = np.load('../models/num_vec_full.npy')
+        if(mode=='train'):
+            par_vecs = np.load('../models/book_norm_par_vecs_full_1k.npy')
+            book_names = np.load('../models/book_filenames_full_1k.npy')
+            num_vec = np.load('../models/num_vec_full_1k.npy')
+        elif(mode=='eval'):
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_1k.npy')
+            book_names = np.load('../models/eval_book_filenames_full_1k.npy')
+            num_vec = np.load('../models/eval_num_vec_full_1k.npy')
         elif(mode=='predict'):
-            par_vecs = np.load('../models/book_norm_par_vecs_20k.npy')
-            book_names = np.load('../models/book_filenames.npy')
-            num_vec = np.load('../models/num_vec.npy')
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_1k.npy')
+            book_names = np.load('../models/eval_book_filenames_full_1k.npy')
+            num_vec = np.load('../models/eval_num_vec_full_1k.npy')
 
 
         for name, par_vec, length in zip(book_names, par_vecs, num_vec):
