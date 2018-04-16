@@ -66,7 +66,9 @@ class B2P2VModel:
     def generator_lj(mode):
         # load vectors
         if(mode=='train'):
-            par_vecs = np.load('../models/book_norm_par_vecs_full_1k.npy')
+            par_vecs = []
+            for i in range(8):
+                par_vecs.extend(np.load('../models/book_norm_par_vecs_full_1k_' + str(i + 1) + '.npy'))
             book_names = np.load('../models/book_filenames_full_1k.npy')
             num_vec = np.load('../models/num_vec_full_1k.npy')
         elif(mode=='eval'):
@@ -95,7 +97,7 @@ class B2P2VModel:
                                                             tf.TensorShape([])))
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
-    dataset = dataset.shuffle(buffer_size=256)
+    dataset = dataset.shuffle(buffer_size=64)
     #dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
@@ -135,11 +137,11 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_full_2',
+        model_dir='../models/b2p2v_1k',
         config=estimator_config,
         params={})
 
-    train = False
+    train = True
 
     if train:
         epochs = 10000

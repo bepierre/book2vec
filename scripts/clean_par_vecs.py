@@ -64,7 +64,11 @@ for b in range(len(book_filenames)):
         bookseq.append([0]*300)
     book_sequence_of_vectors.append(bookseq)
 
+random.seed(10)
 eval_samples = random.sample(range(len(book_filenames)), 500)
+#print(eval_samples)
+
+num_vecs_per_book = max(num_vec)
 
 eval_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if i in eval_samples]
 eval_book_filenames = [x for i, x in enumerate(book_filenames) if i in eval_samples]
@@ -74,16 +78,18 @@ book_sequence_of_vectors = [x for i, x in enumerate(book_sequence_of_vectors) if
 book_filenames = [x for i, x in enumerate(book_filenames) if i not in eval_samples]
 num_vec = [x for i, x in enumerate(num_vec) if i not in eval_samples]
 
-file_path = '../models/book_norm_par_vecs'+ size +'_' + str(int(par_length / 1000)) + 'k.npy'
-print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(max(num_vec), vec_size, int(par_length/1000), len(book_filenames)) + file_path)
-
-np.save(file_path, book_sequence_of_vectors)
+parts=8
+for i in range(parts):
+    start = int(i * len(book_filenames)/parts)
+    end = int((i+1) * len(book_filenames)/parts)
+    file_path = '../models/book_norm_par_vecs'+ size +'_' + str(int(par_length / 1000)) + 'k_'+str(i+1)+'.npy'
+    print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books under '.format(num_vecs_per_book, vec_size, int(par_length/1000), len(book_filenames)) + file_path)
+    np.save(file_path, book_sequence_of_vectors[start:end])
 np.save('../models/book_filenames'+ size +'_' + str(int(par_length / 1000)) + 'k.npy', book_filenames)
 np.save('../models/num_vec'+ size +'_' + str(int(par_length / 1000)) + 'k.npy', num_vec)
 
 file_path = '../models/eval_norm_par_vecs'+ size +'_'  + str(int(par_length / 1000)) + 'k.npy'
-print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books (evaluation set) under '.format(max(num_vec), vec_size, int(par_length/1000), len(eval_book_filenames)) + file_path)
-
+print('Saving {} vectors of {} (for each paragraph of {}k words) for {} books (evaluation set) under '.format(num_vecs_per_book, vec_size, int(par_length/1000), len(eval_book_filenames)) + file_path)
 np.save(file_path, eval_sequence_of_vectors)
 np.save('../models/eval_book_filenames'+ size +'_' + str(int(par_length / 1000)) + 'k.npy', eval_book_filenames)
 np.save('../models/eval_num_vec'+ size +'_' + str(int(par_length / 1000)) + 'k.npy', eval_num_vec)

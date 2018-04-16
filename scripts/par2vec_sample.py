@@ -3,16 +3,18 @@ from gensim.models.doc2vec import Doc2Vec
 import glob
 
 
-vec_names = np.load('../models/vec_names_20k.npy').tolist()
-book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
+vec_names = np.load('../models/vec_names_full_1k.npy').tolist()
+book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 
-model = Doc2Vec.load('../models/par2vec_300_20k.doc2vec')
+model = Doc2Vec.load('../models/par2vec_full_300_1k.doc2vec')
 
-#b = '../data/BookCorpus/Fantasy/The_Hobbit'
-#b = '../data/BookCorpus/Thriller/Da_Vinci_Code'
-b = '../data/BookCorpus/Horror/Bullet'
+#b = '../data/BookCorpusFull/Fantasy/The_Hobbit'
+b = '../data/BookCorpusFull/Mystery/Da_Vinci_Code'
+#b = '../data/BookCorpus/Horror/Bullet'
 
-print(model.docvecs.most_similar(positive = [model[vec_names.index(b + '_par_1')]]))
+#print(model[vec_names.index(b + '_par_110')])
+
+print(model.docvecs.most_similar(positive = [model[vec_names.index(b + '_par_1000')]]))
 
 '''
 b_vecs = []
