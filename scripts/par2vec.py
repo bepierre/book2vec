@@ -68,6 +68,6 @@ for epoch in range(epochs):
     model.min_alpha = model.alpha
     print('Finished epoch ' + str(epoch + 1) + ' out of ' + str(epochs))
 
-    model_name =  '../models/par2vec_'+size+str(vec_size)+'_'+str(int(words_per_par/100))+'c_w.doc2vec'
+    model_name =  '../models/par2vec'+size+'_'+str(vec_size)+'_'+str(int(words_per_par/100))+'c_w.doc2vec'
     model.save(model_name)
     print('Saved model under ' + model_name)

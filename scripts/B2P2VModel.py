@@ -67,18 +67,18 @@ class B2P2VModel:
         # load vectors
         if(mode=='train'):
             par_vecs = []
-            for i in range(8):
-                par_vecs.extend(np.load('../models/book_norm_par_vecs_full_1k_' + str(i + 1) + '.npy'))
-            book_names = np.load('../models/book_filenames_full_1k.npy')
-            num_vec = np.load('../models/num_vec_full_1k.npy')
+            for i in range(2):
+                par_vecs.extend(np.load('../models/book_norm_par_vecs_full_4c_w_' + str(i + 1) + '.npy'))
+            book_names = np.load('../models/book_filenames_full_4c_w.npy')
+            num_vec = np.load('../models/num_vec_full_4c_w.npy')
         elif(mode=='eval'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_full_1k.npy')
-            book_names = np.load('../models/eval_book_filenames_full_1k.npy')
-            num_vec = np.load('../models/eval_num_vec_full_1k.npy')
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
+            book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
+            num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
         elif(mode=='predict'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_full_1k.npy')
-            book_names = np.load('../models/eval_book_filenames_full_1k.npy')
-            num_vec = np.load('../models/eval_num_vec_full_1k.npy')
+            par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
+            book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
+            num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
 
 
         for name, par_vec, length in zip(book_names, par_vecs, num_vec):
@@ -97,7 +97,7 @@ class B2P2VModel:
                                                             tf.TensorShape([])))
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
-    dataset = dataset.shuffle(buffer_size=64)
+    dataset = dataset.shuffle(buffer_size=128)
     #dataset = dataset.repeat(10)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
@@ -137,11 +137,22 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_1k',
+        model_dir='../models/b2p2v_4c_w',
         config=estimator_config,
         params={})
 
     train = True
+
+    #load data once into RAM
+    # par_vecs = []
+    # for i in range(2):
+    #     par_vecs.extend(np.load('../models/book_norm_par_vecs_full_4c_w_' + str(i + 1) + '.npy'))
+    # book_names = np.load('../models/book_filenames_full_4c_w.npy')
+    # num_vec = np.load('../models/num_vec_full_4c_w.npy')
+    #
+    # eval_par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
+    # eval_book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
+    # eval_num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
 
     if train:
         epochs = 10000

@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 vec_size = 300
-par_length = 1000
+#par_length = 1000
+words_per_par = 400
 
 book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
-vec_names = np.load('../models/vec_names_full_'+str(int(par_length/1000))+'k.npy').tolist()
+vec_names = np.load('../models/vec_names_full_'+str(int(words_per_par/100))+'c_w.npy').tolist()
 
 #model = Doc2Vec.load('../models/par2vec'+size+'_'+str(vec_size)+'_'+str(int(par_length/1000))+'k.doc2vec')
-model = Doc2Vec.load('../models/par2vec_full_300_1k.doc2vec')
+model = Doc2Vec.load('../models/par2vec_full_300_4c_w.doc2vec')
 
 #b = '../data/BookCorpusFull/Thriller/James_Bond-1.txt'
 #b = '../data/BookCorpusFull/Mystery/Da_Vinci_Code.txt'
@@ -55,4 +56,4 @@ par_vecs = model.docvecs.vectors_docs[start:end]
 
 #np.save('../models/norm_par_vecs'+size+'.npy', norm_vecs)
 
-np.savetxt("../models/book_trajectories/Hobbit_1k.csv", par_vecs, delimiter=",")
+np.savetxt("../models/book_trajectories/Hobbit_4c_w.csv", par_vecs, delimiter=",")
