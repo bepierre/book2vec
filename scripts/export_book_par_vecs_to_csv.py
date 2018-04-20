@@ -16,11 +16,14 @@ model = Doc2Vec.load('../models/par2vec_full_300_4c_w.doc2vec')
 
 #b = '../data/BookCorpusFull/Thriller/James_Bond-1.txt'
 #b = '../data/BookCorpusFull/Mystery/Da_Vinci_Code.txt'
-#b = '../data/BookCorpusFull/Romance/Attachments.txt'
+#b = '../data/BookCorpusFull/Romance/Marriage_Trap.txt'
 #b = '../data/BookCorpusFull/Science_fiction/Asimov47.txt'
-b = '../data/BookCorpusFull/Fantasy/The_Hobbit.txt'
+#b = '../data/BookCorpusFull/Fantasy/The_Hobbit.txt'
 #b = '../data/BookCorpusFull/Science_fiction/Stormlight_Archive-1.txt'
 #b = '../data/BookCorpusFull/Fantasy/Mistborn-1.txt'
+#b = '../data/BookCorpusFull/Vampires/Vampireville.txt'
+#b = '../data/BookCorpusFull/Fantasy/The_Silmarillon.txt'
+b = '../data/BookCorpusFull/Vampires/Vampalicious.txt'
 
 start = vec_names.index(b[0:-4]+'_par_1')
 
@@ -29,6 +32,8 @@ next_book = book_filenames[book_filenames.index(b) + 1]
 end = vec_names.index(next_book[0:-4]+'_par_1') - 1
 
 par_vecs = model.docvecs.vectors_docs[start:end]
+
+np.savetxt("../models/book_trajectories/Vampalicious_4c_w.csv", par_vecs, delimiter=",")
 
 # b_mean = np.mean(model.docvecs.vectors_docs, axis=0)
 # b_var = np.var(model.docvecs.vectors_docs, axis=0)
@@ -55,5 +60,3 @@ par_vecs = model.docvecs.vectors_docs[start:end]
 # plt.show()
 
 #np.save('../models/norm_par_vecs'+size+'.npy', norm_vecs)
-
-np.savetxt("../models/book_trajectories/Hobbit_4c_w.csv", par_vecs, delimiter=",")

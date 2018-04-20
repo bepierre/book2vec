@@ -33,9 +33,15 @@ for book_filename in book_filenames:
                                TaggedDocument(
                                      par, [book_filename[0:len(book_filename)-4] + '_par_' + str(p)]))
             vec_names.append(book_filename[0:len(book_filename)-4] + '_par_' + str(p))
+            # if (book_filename[0:len(book_filename) - 4] + '_par_' + str(p)=='../data/BookCorpusFull/Thriller/James_Bond-1_par_32'):
+            #     print(par)
+            #     exit(0)
             p += 1
 
+
 np.save('../models/vec_names'+size+'_'+str(int(words_per_par/100))+'c_w.npy', vec_names)
+
+exit(0)
 
 print(str(len(book_filenames)) + ' Books split into ' + str(len(paragraph_corpus)) + ' paragraphs of length: ' +str(int(words_per_par/100))+'c')
 
@@ -51,7 +57,6 @@ vec_size = 300
 
 model = Doc2Vec(size = vec_size, min_count = 5, workers=cores, alpha = 0.025, min_alpha=0.025, iter=5)
 #model = Doc2Vec(size = 300, min_count = 5, workers=cores, iter = 10)
-
 
 model.build_vocab(paragraph_corpus)
 

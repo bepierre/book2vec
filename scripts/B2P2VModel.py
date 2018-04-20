@@ -79,7 +79,9 @@ class B2P2VModel:
             par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
             book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
             num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
-
+        # par_vecs = mode[0]
+        # book_names = mode[1]
+        # num_vec = mode[2]
 
         for name, par_vec, length in zip(book_names, par_vecs, num_vec):
             input_sequence = par_vec
@@ -98,7 +100,8 @@ class B2P2VModel:
 
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=128)
-    #dataset = dataset.repeat(10)
+    if mode=='train':
+        dataset = dataset.repeat(20)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -141,18 +144,20 @@ if __name__ == '__main__':
         config=estimator_config,
         params={})
 
-    train = True
-
     #load data once into RAM
     # par_vecs = []
     # for i in range(2):
     #     par_vecs.extend(np.load('../models/book_norm_par_vecs_full_4c_w_' + str(i + 1) + '.npy'))
     # book_names = np.load('../models/book_filenames_full_4c_w.npy')
     # num_vec = np.load('../models/num_vec_full_4c_w.npy')
+    # train = [par_vecs, book_names, num_vec]
     #
     # eval_par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
     # eval_book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
     # eval_num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
+    # eval = [eval_par_vecs, eval_book_names, eval_num_vec]
+
+    train = True
 
     if train:
         epochs = 10000
