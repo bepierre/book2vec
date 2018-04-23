@@ -23,7 +23,9 @@ model = Doc2Vec.load('../models/par2vec_full_300_4c_w.doc2vec')
 #b = '../data/BookCorpusFull/Fantasy/Mistborn-1.txt'
 #b = '../data/BookCorpusFull/Vampires/Vampireville.txt'
 #b = '../data/BookCorpusFull/Fantasy/The_Silmarillon.txt'
-b = '../data/BookCorpusFull/Vampires/Vampalicious.txt'
+#b = '../data/BookCorpusFull/Vampires/Vampalicious.txt'
+b = '../data/BookCorpusFull/Fantasy/Mistborn-4.txt'
+
 
 start = vec_names.index(b[0:-4]+'_par_1')
 
@@ -33,7 +35,7 @@ end = vec_names.index(next_book[0:-4]+'_par_1') - 1
 
 par_vecs = model.docvecs.vectors_docs[start:end]
 
-np.savetxt("../models/book_trajectories/Vampalicious_4c_w.csv", par_vecs, delimiter=",")
+np.savetxt("../models/book_trajectories/Mistborn-4_4c_w.csv", par_vecs, delimiter=",")
 
 # b_mean = np.mean(model.docvecs.vectors_docs, axis=0)
 # b_var = np.var(model.docvecs.vectors_docs, axis=0)
