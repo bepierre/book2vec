@@ -27,6 +27,9 @@ for book_filename in book_filenames:
         #remove first paragraph because it contains book info
         #remove last paragraph because it might be too short
         pars = pars[1:-1]
+        print(book_filename)
+        np.save('../data/paragraph_corpus/{}/{}.npy'.format(book_filename.split('/')[3],
+                                                              book_filename.split('/')[4][0:-4]), pars)
         p=1
         for par in pars:
             paragraph_corpus.append(
@@ -38,10 +41,7 @@ for book_filename in book_filenames:
             #     exit(0)
             p += 1
 
-
 np.save('../models/vec_names'+size+'_'+str(int(words_per_par/100))+'c_w.npy', vec_names)
-
-exit(0)
 
 print(str(len(book_filenames)) + ' Books split into ' + str(len(paragraph_corpus)) + ' paragraphs of length: ' +str(int(words_per_par/100))+'c')
 

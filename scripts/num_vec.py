@@ -9,17 +9,17 @@ words_per_par = 400
 
 book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 vec_names = np.load('../models/vec_names'+size +'_'+ str(int(words_per_par / 100)) + 'c_w.npy').tolist()
-genre_names = sorted(glob.glob('../data/BookCorpusFull/*'))
+#genre_names = sorted(glob.glob('../data/BookCorpusFull/*'))
 
-for i in range(len(genre_names)):
-    genre_names[i] = genre_names[i].split('/')[3]
-
-book_genres = [0] * len(vec_names)
-j = 0
-for vec_name in vec_names:
-    print(vec_name)
-    book_genres[j] = genre_names.index(vec_name.split('/')[3])
-    j += 1
+# for i in range(len(genre_names)):
+#     genre_names[i] = genre_names[i].split('/')[3]
+#
+# book_genres = [0] * len(vec_names)
+# j = 0
+# for vec_name in vec_names:
+#     print(vec_name)
+#     book_genres[j] = genre_names.index(vec_name.split('/')[3])
+#     j += 1
 
 model = Doc2Vec.load('../models/par2vec'+size+'_'+str(vec_size)+'_'+str(int(words_per_par/100))+'c_w.doc2vec')
 
@@ -38,4 +38,4 @@ for vec_name in vec_names:
         num_vec[b] = curr_seq_length
 
 
-np.savetxt("../models/num_vec.csv", num_vec, delimiter=",")
+np.savetxt("../matlab/kmeans/num_vec.csv", num_vec, delimiter=",")

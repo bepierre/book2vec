@@ -1,19 +1,44 @@
-import numpy as np
-from gensim.models.doc2vec import Doc2Vec
 import glob
-import scipy.io
+import gensim
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+import numpy as np
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 size = '_full'
 vec_size = 300
-#par_length = 1000
 words_per_par = 400
 
+size= '_full'
+
+paragraph_corpus = []
+vec_names = []
 book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 vec_names = np.load('../models/vec_names'+size +'_'+ str(int(words_per_par / 100)) + 'c_w.npy').tolist()
 genre_names = sorted(glob.glob('../data/BookCorpusFull/*'))
 
-
-print(vec_names[0:1])
-
 # list2 = np.array(book_filenames, dtype=np.object)
-# scipy.io.savemat('../models/book_names.mat', mdict={'book_names':list2})
+# scipy.io.savemat('../matlab/kmeans/book_names.mat', mdict={'book_names':list2})
+
+book_filename = '../data/BookCorpusFull/Mystery/Da_Vinci_Code.txt'
+with open(book_filename, 'r') as book_file:
+    book = gensim.utils.simple_preprocess(book_file.read())
+    pars = list(chunks(book, words_per_par))
+    #remove first paragraph because it contains book info
+    #remove last paragraph because it might be too short
+    pars = pars[1:-1]
+    p=1
+    for par in pars:
+        paragraph_corpus.append(
+                           TaggedDocument(
+                                 par, [book_filename[0:len(book_filename)-4] + '_par_' + str(p)]))
+        vec_names.append(book_filename[0:len(book_filename)-4] + '_par_' + str(p))
+        # if (book_filename[0:len(book_filename) - 4] + '_par_' + str(p)=='../data/BookCorpusFull/Thriller/James_Bond-1_par_32'):
+        #     print(par)
+        #     exit(0)
+        p += 1
+
+print(paragraph_corpus[0])

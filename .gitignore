@@ -2,3 +2,4 @@ models
 data
 *pyc
 **/__pycache_
+matlab/*/*.csv
