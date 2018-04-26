@@ -1,7 +1,7 @@
 import numpy as np
 from gensim.models.doc2vec import Doc2Vec
 import glob
-from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import MiniBatchKMeans, KMeans
 
 vec_names = np.load('../models/vec_names_full_4c_w.npy').tolist()
 book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
@@ -53,10 +53,12 @@ for i in range(start, start+curr_seq_length):
 print(len(centered_vecs))
 print('Finished computing book centered paragraphs. Starting kmeans clustering.')
 
-kmeans_c = MiniBatchKMeans(n_clusters=100, batch_size=100000, random_state=0).fit(centered_vecs)
+#kmeans_c = MiniBatchKMeans(n_clusters=100, batch_size=100000, random_state=0).fit(centered_vecs)
+kmeans_c = KMeans(n_clusters=10, random_state=0).fit(centered_vecs)
 
-np.savetxt("../models/kmeans_100_c_labels.csv", kmeans_c.labels_, delimiter=",")
-np.savetxt("../models/kmeans_100_c_cluster_centers.csv", kmeans_c.cluster_centers_, delimiter=",")
+
+np.savetxt("../models/kmeans_10_c_labels.csv", kmeans_c.labels_, delimiter=",")
+np.savetxt("../models/kmeans_10_c_cluster_centers.csv", kmeans_c.cluster_centers_, delimiter=",")
 #
 # diff_vecs = []
 #

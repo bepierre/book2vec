@@ -1,11 +1,11 @@
 import glob
 from gensim.models.doc2vec import Doc2Vec
 
-book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 
-model = Doc2Vec.load('../models/book2vec_50.doc2vec')
+model = Doc2Vec.load('../models/book2vec_full_300.doc2vec')
 
-print(model.docvecs.most_similar(book_filenames.index('../data/BookCorpus/Romance/Pushing-the_Limits-1_5.txt')))
+print(model.docvecs.most_similar(book_filenames.index('../data/BookCorpusFull/Horror/Nona.txt')))
 
 '''
 for horror_book in sorted(glob.glob('../data/BookCorpus/Horror/*txt')):

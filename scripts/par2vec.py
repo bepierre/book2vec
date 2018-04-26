@@ -27,9 +27,9 @@ for book_filename in book_filenames:
         #remove first paragraph because it contains book info
         #remove last paragraph because it might be too short
         pars = pars[1:-1]
-        print(book_filename)
-        np.save('../data/paragraph_corpus/{}/{}.npy'.format(book_filename.split('/')[3],
-                                                              book_filename.split('/')[4][0:-4]), pars)
+        # print(book_filename)
+        # np.save('../data/paragraph_corpus/{}/{}.npy'.format(book_filename.split('/')[3],
+        #                                                     book_filename.split('/')[4][0:-4]), pars)
         p=1
         for par in pars:
             paragraph_corpus.append(
