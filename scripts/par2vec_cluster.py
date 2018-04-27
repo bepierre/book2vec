@@ -54,11 +54,13 @@ print(len(centered_vecs))
 print('Finished computing book centered paragraphs. Starting kmeans clustering.')
 
 #kmeans_c = MiniBatchKMeans(n_clusters=100, batch_size=100000, random_state=0).fit(centered_vecs)
-kmeans_c = KMeans(n_clusters=10, random_state=0).fit(centered_vecs)
+kmeans_c = KMeans(n_clusters=100, random_state=0).fit(centered_vecs)
 
+np.save("../models/kmeans_100_c_labels.npy", kmeans_c.labels_)
+np.save("../models/kmeans_100_c_centers.npy", kmeans_c.cluster_centers_)
 
-np.savetxt("../models/kmeans_10_c_labels.csv", kmeans_c.labels_, delimiter=",")
-np.savetxt("../models/kmeans_10_c_cluster_centers.csv", kmeans_c.cluster_centers_, delimiter=",")
+# np.savetxt("../models/kmeans_10_c_labels.csv", kmeans_c.labels_, delimiter=",")
+# np.savetxt("../models/kmeans_10_c_cluster_centers.csv", kmeans_c.cluster_centers_, delimiter=",")
 #
 # diff_vecs = []
 #
