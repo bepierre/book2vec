@@ -10,12 +10,14 @@ def chunks(l, n):
         yield l[i:i + n]
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*.txt'))
+#book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*.txt'))
+book_filenames = sorted(glob.glob('../data/BookCorpus/*/*.txt'))
 
 #par_length = 1000
 words_per_par = 400
 
-size= '_full'
+#size= '_full'
+size=''
 
 paragraph_corpus = []
 vec_names = []

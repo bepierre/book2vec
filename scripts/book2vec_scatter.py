@@ -4,7 +4,8 @@ from gensim.models.doc2vec import Doc2Vec
 import matplotlib.pyplot as plt
 import numpy as np
 
-book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
+#book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
+book_filenames = np.load('../models/eval_book_filenames_full.npy')
 genre_names = sorted(glob.glob('../data/BookCorpusFull/*'))
 
 for i in range(len(genre_names)):
@@ -16,25 +17,12 @@ for book_filename in book_filenames:
     book_genres[j] = genre_names.index(book_filename.split('/')[3])
     j += 1
 
+vec_size = 100
 
-
-load = False
-
-vec_size = 300
-
-if not load:
-    model = Doc2Vec.load('../models/book2vec_full_'+str(vec_size)+'.doc2vec')
-    #tsne_model_2D = TSNE(n_components=2, random_state=0, verbose=1, init="pca", n_iter=10000, perplexity=50)
-    tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=30, init='pca')
-    tsne_articles_2D = tsne_model_2D.fit_transform(model.docvecs.vectors_docs)
-    np.save('../models/tsne2D_full_'+str(vec_size)+'.npy', tsne_articles_2D)
-
-    #tsne_model_3D = TSNE(n_components=3, random_state=0, verbose=2, init="pca", method="exact")
-    #tsne_articles_3D = tsne_model_3D.fit_transform(model.docvecs.vectors_docs)
-    #np.save('tsne3D.npy', tsne_articles_3D)
-else:
-    tsne_articles_2D = np.load('../models/tsne2D_full_'+str(vec_size)+'.npy')
-    #tsne_articles_3D = np.load('tsne3D.npy')
+model = Doc2Vec.load('../models/book2vec_eval_'+str(vec_size)+'.doc2vec')
+#tsne_model_2D = TSNE(n_components=2, random_state=0, verbose=1, init="pca", n_iter=10000, perplexity=50)
+tsne_model_2D = TSNE(n_components=2, n_iter=10000, perplexity=50, init='pca')
+tsne_articles_2D = tsne_model_2D.fit_transform(model.docvecs.vectors_docs)
 
 # 2D
 fig = plt.figure(figsize=(15,8))
@@ -47,7 +35,7 @@ for g in range(len(genre_names)):
 
 plt.legend()
 
-plt.savefig('../figures/cluster_2D_full_'+str(vec_size)+'.png')
+plt.savefig('../figures/cluster_2D_eval_'+str(vec_size)+'.png')
 
 # 3D
 #fig2 = plt.figure(figsize=(15,8))

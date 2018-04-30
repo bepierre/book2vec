@@ -21,10 +21,11 @@ class BPCModel:
         file_name = features['file_name']
         target_seq = features['target_seq']
 
-        emb_encoder_inputs = tf.one_hot(encoder_inputs, depth=hparams.num_cluster, axis=-1)
+        emb_encoder_inputs = tf.one_hot(encoder_inputs, depth=hparams.embed_size, axis=-1)
 
         with tf.variable_scope("encoder"):
-            cell = tf.contrib.rnn.GRUCell(hparams.num_cluster)
+            #cell = tf.contrib.rnn.GRUCell(hparams.num_cluster)
+            cell = tf.contrib.rnn.MultiRNNCell([tf.contrib.rnn.GRUCell(hparams.num_cluster) for n in range(10)])
             outputs, state_encoder = tf.nn.dynamic_rnn(cell=cell, inputs=emb_encoder_inputs,
                                                        sequence_length=encoder_inputs_length, dtype=tf.float32)
 
@@ -146,12 +147,12 @@ if __name__ == '__main__':
     bpcmodel = BPCModel()
 
     session_config = tf.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.8
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.1
     estimator_config = tf.estimator.RunConfig(session_config=session_config)
 
     classifier = tf.estimator.Estimator(
         model_fn=bpcmodel.model_fn,
-        model_dir='../models/bpc_100',
+        model_dir='../models/bpc_mult3',
         config=estimator_config,
         params={})
 
@@ -167,11 +168,13 @@ if __name__ == '__main__':
         book_filenames = []
         label_probs = []
         target = []
+        book_vecs = []
         for p in predictions:
             size = p['size']
             book_filenames.append(p['book'].decode('utf-8'))
             label_probs.append(p['probs'][:size])
             target.append(p['target'][:size])
+            book_vecs.append(p['state'])
 
         label_probs = [x for _,x in sorted(zip(book_filenames,label_probs))]
         target = [x for _, x in sorted(zip(book_filenames, target))]
@@ -180,11 +183,16 @@ if __name__ == '__main__':
         books = np.zeros((len(book_filenames),), dtype=np.object)
         for i in range(len(book_filenames)):
             books[i] = {}
-            books[i]['namse'] = book_filenames[i]
+            books[i]['name'] = book_filenames[i]
             books[i]['target'] = target[i]
             books[i]['probs'] = label_probs[i]
 
         scipy.io.savemat('../matlab/bpc/bpc_eval_books.mat', {'books': books})
+
+        book_vecs = [x for _, x in sorted(zip(book_filenames, book_vecs))]
+        book_filenames = sorted(book_filenames)
+
+        np.save('../models/bpc_book_vecs.npy', book_vecs)
 
         # list2 = np.array(book_filenames, dtype=np.object)
         # scipy.io.savemat('../matlab/kmeans/eval_book_names.mat', mdict={'eval_book_names': list2})

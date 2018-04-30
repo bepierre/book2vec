@@ -2,9 +2,11 @@ import glob
 import gensim
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 import multiprocessing
+import numpy as np
 
 print("Searching for books.")
-book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
+#book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
+book_filenames = np.load('../models/eval_book_filenames_full.npy')
 
 book_corpus = []
 errors = 0
@@ -29,7 +31,7 @@ print('Total number of words: ' + str(words))
 
 cores = multiprocessing.cpu_count()
 
-vec_size = 300
+vec_size = 100
 
 model = Doc2Vec(size = vec_size, min_count = 5, workers=cores, alpha = 0.025, min_alpha=0.025, iter=10)
 #model = Doc2Vec(size = 300, min_count = 5, workers=cores, iter = 10)
@@ -50,6 +52,7 @@ for epoch in range(epochs):
     model.min_alpha = model.alpha
     print('Finished epoch ' + str(epoch + 1) + ' out of ' + str(epochs))
 
-    model_name =  '../models/book2vec_full_'+str(vec_size)+'.doc2vec'
+    #model_name =  '../models/book2vec_full_'+str(vec_size)+'.doc2vec'
+    model_name =  '../models/book2vec_eval_'+str(vec_size)+'.doc2vec'
     model.save(model_name)
     print('Saved model under ' + model_name)

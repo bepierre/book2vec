@@ -48,5 +48,8 @@ import scipy.io
 #
 # print(paragraph_corpus[0])
 
-labels = np.loadtxt("../models/kmeans_100_c_labels.csv", delimiter=",")
-np.save("../models/kmeans_100_c_labels.npy", labels)
+# labels = np.loadtxt("../models/kmeans_100_c_labels.csv", delimiter=",")
+# np.save("../models/kmeans_100_c_labels.npy", labels)
+
+eval_names = np.load('../models/eval_book_filenames_full.npy')
+print(eval_names)
