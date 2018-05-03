@@ -25,7 +25,7 @@ class BPCModel:
 
         with tf.variable_scope("encoder"):
             #cell = tf.contrib.rnn.GRUCell(hparams.num_cluster)
-            cell = tf.contrib.rnn.MultiRNNCell([tf.contrib.rnn.GRUCell(hparams.num_cluster) for n in range(10)])
+            cell = tf.contrib.rnn.MultiRNNCell([tf.contrib.rnn.GRUCell(hparams.num_cluster) for n in range(2)])
             outputs, state_encoder = tf.nn.dynamic_rnn(cell=cell, inputs=emb_encoder_inputs,
                                                        sequence_length=encoder_inputs_length, dtype=tf.float32)
 
@@ -147,12 +147,12 @@ if __name__ == '__main__':
     bpcmodel = BPCModel()
 
     session_config = tf.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.1
+    session_config.gpu_options.per_process_gpu_memory_fraction = 0.8
     estimator_config = tf.estimator.RunConfig(session_config=session_config)
 
     classifier = tf.estimator.Estimator(
         model_fn=bpcmodel.model_fn,
-        model_dir='../models/bpc_mult3',
+        model_dir='../models/bpc_mult4',
         config=estimator_config,
         params={})
 
@@ -187,7 +187,7 @@ if __name__ == '__main__':
             books[i]['target'] = target[i]
             books[i]['probs'] = label_probs[i]
 
-        scipy.io.savemat('../matlab/bpc/bpc_eval_books.mat', {'books': books})
+        scipy.io.savemat('../matlab/bpc/bpc_2gru_eval_books.mat', {'books': books})
 
         book_vecs = [x for _, x in sorted(zip(book_filenames, book_vecs))]
         book_filenames = sorted(book_filenames)

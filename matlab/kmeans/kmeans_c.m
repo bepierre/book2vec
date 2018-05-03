@@ -1,7 +1,7 @@
 close all
 
 num_vec = csvread('num_vec.csv');
-book_num = 727- 1;
+book_num = 1452 - 1;
 num_books = 1;
 par_inds = sum(num_vec(1:book_num))+1:sum(num_vec(1:book_num+num_books));
 %subplot(3,1,1);

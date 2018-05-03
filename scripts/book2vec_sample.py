@@ -5,7 +5,7 @@ book_filenames = sorted(glob.glob('../data/BookCorpusFull/*/*txt'))
 
 model = Doc2Vec.load('../models/book2vec_full_300.doc2vec')
 
-print(model.docvecs.most_similar(book_filenames.index('../data/BookCorpusFull/Horror/Nona.txt')))
+print(model.docvecs.most_similar(book_filenames.index('../data/BookCorpusFull/Thriller/Echo_Burning.txt')))
 
 '''
 for horror_book in sorted(glob.glob('../data/BookCorpus/Horror/*txt')):

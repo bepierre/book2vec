@@ -1,7 +1,7 @@
 close all
 
 num_vec = csvread('num_vec.csv');
-book_num = 755 - 1;
+book_num = 2 - 1;
 num_books = 1;
 par_inds = sum(num_vec(1:book_num))+1:sum(num_vec(1:book_num+num_books));
 
@@ -31,7 +31,7 @@ set(gca,'XTick',1:length(visited_clusters_c))
 set(gca,'XTickLabel',visited_clusters_c)
 a = get(gca,'XTickLabel');
 set(gca,'XTickLabel',a,'fontsize',6)
-title('centered')
+% title('centered')
 % 
 % subplot(3,1,3);
 % idx_d = csvread('kmeans_d_labels.csv');

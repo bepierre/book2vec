@@ -68,15 +68,15 @@ class B2P2VModel:
         if(mode=='train'):
             par_vecs = []
             for i in range(2):
-                par_vecs.extend(np.load('../models/book_norm_par_vecs_full_4c_w_' + str(i + 1) + '.npy'))
+                par_vecs.extend(np.load('../models/book_centered_par_vecs_full_4c_w_' + str(i + 1) + '.npy'))
             book_names = np.load('../models/book_filenames_full_4c_w.npy')
             num_vec = np.load('../models/num_vec_full_4c_w.npy')
         elif(mode=='eval'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
+            par_vecs = np.load('../models/eval_centered_par_vecs_full_4c_w.npy')
             book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
             num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
         elif(mode=='predict'):
-            par_vecs = np.load('../models/eval_norm_par_vecs_full_4c_w.npy')
+            par_vecs = np.load('../models/eval_centered_par_vecs_full_4c_w.npy')
             book_names = np.load('../models/eval_book_filenames_full_4c_w.npy')
             num_vec = np.load('../models/eval_num_vec_full_4c_w.npy')
         # par_vecs = mode[0]
@@ -101,7 +101,7 @@ class B2P2VModel:
     dataset = dataset.map(parse_example, num_parallel_calls=4)
     dataset = dataset.shuffle(buffer_size=128)
     if mode=='train':
-        dataset = dataset.repeat(20)
+        dataset = dataset.repeat(5)
     dataset = dataset.batch(hparams.batch_size)
     dataset = dataset.prefetch(5)
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_4c_w',
+        model_dir='../models/b2p2v_centered',
         config=estimator_config,
         params={})
 

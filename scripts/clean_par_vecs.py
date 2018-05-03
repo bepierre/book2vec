@@ -53,6 +53,25 @@ b_var = np.var(par_vecs, axis=0)
 #
 #np.save('../models/norm_par_vecs'+size+'_' + str(int(par_length / 1000)) + 'k.npy', norm_vecs)
 
+
+
+centered_vecs = []
+
+start = 0
+curr_seq_length = -1
+for vec_name in vec_names:
+    if (int(vec_name.split('_')[-1]) == 1 and curr_seq_length > 0):
+        b_mean = np.mean(par_vecs[start:start+curr_seq_length], axis=0)
+        for i in range(start, start+curr_seq_length):
+            centered_vecs.append(par_vecs[i] - b_mean)
+        start = start + curr_seq_length
+        curr_seq_length = 0
+    if int(vec_name.split('_')[-1]) > curr_seq_length:
+        curr_seq_length = int(vec_name.split('_')[-1])
+b_mean = np.mean(par_vecs[start:start+curr_seq_length], axis=0)
+for i in range(start, start+curr_seq_length):
+    centered_vecs.append(par_vecs[i] - b_mean)
+
 book_sequence_of_vectors = []
 
 i = 0
@@ -60,7 +79,7 @@ for b in range(len(book_filenames)):
     bookseq = []
     for p in range(num_vec[b]):
         #bookseq.append(norm_vecs[i])
-        bookseq.append((par_vecs[i] - b_mean) / b_var)
+        bookseq.append(centered_vecs[i])
         i += 1
     for q in range(num_vec[b], max(num_vec)):
         bookseq.append([0]*300)
@@ -84,13 +103,13 @@ parts=2
 for i in range(parts):
     start = int(i * len(book_filenames)/parts)
     end = int((i+1) * len(book_filenames)/parts)
-    file_path = '../models/book_norm_par_vecs'+ size +'_' + str(int(words_per_par / 100)) + 'c_w_'+str(i+1)+'.npy'
+    file_path = '../models/book_centered_par_vecs'+ size +'_' + str(int(words_per_par / 100)) + 'c_w_'+str(i+1)+'.npy'
     print('Saving {} vectors of {} (for each paragraph of {} hundred words) for {} books under '.format(num_vecs_per_book, vec_size, int(words_per_par/100), len(book_filenames)) + file_path)
     np.save(file_path, book_sequence_of_vectors[start:end])
 np.save('../models/book_filenames'+ size +'_' + str(int(words_per_par / 100)) + 'c_w.npy', book_filenames)
 np.save('../models/num_vec'+ size +'_' + str(int(words_per_par / 100)) + 'c_w.npy', num_vec)
 
-file_path = '../models/eval_norm_par_vecs'+ size +'_'  + str(int(words_per_par / 100)) + 'c_w.npy'
+file_path = '../models/eval_centered_par_vecs'+ size +'_'  + str(int(words_per_par / 100)) + 'c_w.npy'
 print('Saving {} vectors of {} (for each paragraph of {} hundred words) for {} books (evaluation set) under '.format(num_vecs_per_book, vec_size, int(words_per_par/100), len(eval_book_filenames)) + file_path)
 np.save(file_path, eval_sequence_of_vectors)
 np.save('../models/eval_book_filenames'+ size +'_' + str(int(words_per_par / 100)) + 'c_w.npy', eval_book_filenames)
