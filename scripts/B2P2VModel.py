@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     classifier = tf.estimator.Estimator(
         model_fn=b2p2vmodel.model_fn,
-        model_dir='../models/b2p2v_centered',
+        model_dir='../models/b2p2v_centered2',
         config=estimator_config,
         params={})
 
@@ -179,5 +179,5 @@ if __name__ == '__main__':
         book_filenames = sorted(book_filenames)
 
         np.save('../models/b2p2v_book_filenames.npy', book_filenames)
-        np.save('../models/b2p2v_book_vecs.npy', book_vecs)
-        np.save('../models/b2p2v_predicted_vecs.npy', predicted_vecs)
+        np.save('../models/b2p2v_centered_book_vecs.npy', book_vecs)
+        np.save('../models/b2p2v_centered_predicted_vecs.npy', predicted_vecs)

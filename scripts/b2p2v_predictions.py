@@ -5,12 +5,12 @@ from scipy import spatial
 
 vec_names = np.load('../models/vec_names_20k.npy').tolist()
 book_filenames = sorted(glob.glob('../data/BookCorpus/*/*txt'))
-model = Doc2Vec.load('../models/par2vec_300_20k.doc2vec')
-par_vecs = model.docvecs.vectors_docs
-norm_vecs = np.load('../models/norm_par_vecs.npy')
+# model = Doc2Vec.load('../models/par2vec_300_20k.doc2vec')
+# par_vecs = model.docvecs.vectors_docs
+target_vecs = np.load('../models/norm_par_vecs.npy')
 
 #tree = spatial.KDTree(par_vecs)
-tree = spatial.KDTree(norm_vecs)
+tree = spatial.KDTree(target_vecs)
 
 
 #cleaned_vecs = np.load('../models/book_par_vecs_20k.npy')

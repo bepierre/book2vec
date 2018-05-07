@@ -74,12 +74,15 @@ for i in range(start, start+curr_seq_length):
 
 book_sequence_of_vectors = []
 
+c_mean = np.mean(centered_vecs, axis=0)
+c_var = np.var(centered_vecs, axis=0)
+
 i = 0
 for b in range(len(book_filenames)):
     bookseq = []
     for p in range(num_vec[b]):
         #bookseq.append(norm_vecs[i])
-        bookseq.append(centered_vecs[i])
+        bookseq.append((centered_vecs[i]-c_mean)/c_var)
         i += 1
     for q in range(num_vec[b], max(num_vec)):
         bookseq.append([0]*300)
